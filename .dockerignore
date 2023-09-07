@@ -1,0 +1,8 @@
+.flake8
+.pre-commit-config.yaml
+pyproject.toml
+.git/
+Dockerfile
+tests/
+requirements-dev.txt
+.env

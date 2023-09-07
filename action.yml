@@ -1,0 +1,8 @@
+name: 'Pre Requisites Action'
+description: 'Action to create branches, secure them and set project information'
+outputs:
+  app_name:
+    description: 'Application name'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
