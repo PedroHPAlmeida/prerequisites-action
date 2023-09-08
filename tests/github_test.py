@@ -19,7 +19,11 @@ def test_make_request(mock_requests, mock_response, mock_json):
         http_method,
         f'{github.GITHUB_API_URL}/{path}',
         data='{"data": "anything"}',
-        headers={'accept': 'application/vnd.github+json', 'Authorization': f'Bearer {github.GITHUB_TOKEN}'},
+        headers={
+            'accept': 'application/vnd.github+json',
+            'Authorization': f'Bearer {github.GITHUB_TOKEN}',
+            'X-GitHub-Api-Version': '2022-11-28',
+        },
     )
     assert response == (dict(), 200)
 
@@ -65,6 +69,7 @@ def test_get_branch_that_doesnt_exist(mock_make_request):
 @patch('src.github.make_request')
 def test_create_branch(mock_make_request, mock_get_branch):
     mock_get_branch.return_value = {'sha': 'any-sha'}
+    mock_make_request.return_value = (dict(), 201)
 
     owner = 'any'
     repo = 'repo-name'
@@ -76,6 +81,16 @@ def test_create_branch(mock_make_request, mock_get_branch):
     mock_make_request.assert_called_once_with(
         f'repos/{owner}/{repo}/git/refs', 'POST', {'ref': f'refs/heads/{branch}', 'sha': 'any-sha'}
     )
+
+
+@patch('src.github.get_branch')
+@patch('src.github.make_request')
+def test_create_branch_that_already_exists(mock_make_request, mock_get_branch):
+    mock_get_branch.return_value = {'sha': 'any-sha'}
+    mock_make_request.return_value = (dict(), 400)
+
+    with pytest.raises(Exception):
+        github.create_branch('any', 'repo-name', 'branch-that-already-exists', 'master')
 
 
 @patch('src.github.create_branch')
@@ -92,8 +107,25 @@ def test_create_branchs(mock_create_branch):
     assert mock_create_branch.call_args_list == expected_calls
 
 
+@patch('src.github.create_branch')
+def test_create_branchs_that_already_exists(mock_create_branch):
+    mock_create_branch.side_effect = Exception
+    owner = 'any'
+    repo = 'repo-name'
+    branches = ['develop', 'release', 'branch-that-already-exists']
+    from_branch = 'master'
+    github.create_branchs(owner, repo, branches, from_branch)
+
+    assert mock_create_branch.call_count == len(branches)
+
+    expected_calls = [call(owner, repo, branch, from_branch) for branch in branches]
+    assert mock_create_branch.call_args_list == expected_calls
+
+
 @patch('src.github.make_request')
 def test_protect_branch(mock_make_request):
+    mock_make_request.return_value = (dict(), 200)
+
     owner = 'any'
     repo = 'repo-name'
     branch = 'master'
@@ -110,6 +142,17 @@ def test_protect_branch(mock_make_request):
             'restrictions': None,
         },
     )
+
+
+@patch('src.github.make_request')
+def test_protect_branch_error(mock_make_request):
+    mock_make_request.return_value = (dict(), 403)
+
+    with pytest.raises(Exception):
+        owner = 'any'
+        repo = 'repo-name'
+        branch = 'master'
+        github.protect_branch(owner, repo, branch)
 
 
 @patch('src.github.protect_branch')

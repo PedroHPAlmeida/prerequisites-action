@@ -1,6 +1,6 @@
 import os
 
-import github as github
+import github
 
 
 default_branch = os.getenv('INPUT_DEFAULT_BRANCH')
