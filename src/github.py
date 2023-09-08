@@ -5,7 +5,7 @@ import json
 import requests
 
 GITHUB_API_URL = os.environ.get('GITHUB_API_URL')
-GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+GITHUB_TOKEN = os.environ.get('INPUT_GITHUB_TOKEN')
 
 
 def make_request(

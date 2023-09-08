@@ -1,5 +1,20 @@
-name: 'Pre Requisites Action'
-description: 'Action to create branches, secure them and set project information'
+name: Pre Requisites Action
+description: Action to create branches, secure them and set project information
+inputs:
+  DEFAULT_BRANCH:
+    description: Default branch of repository (e.g. main, master)
+    required: true
+  BRANCHES:
+    description: Branches to be created (separeted by comma)
+    required: true
+  REPO:
+    description: The path to the repository where the action will be used, e.g. 'alstr/my-repo' (automatically set)
+    required: false
+    default: ${{ github.repository }}
+  GITHUB_TOKEN:
+    description: The GitHub access token
+    required: false
+    default: ${{ github.token }}
 outputs:
   app_name:
     description: 'Application name'
