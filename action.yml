@@ -1,5 +1,6 @@
 name: Pre Requisites Action
 description: Action to create branches, secure them and set project information
+
 inputs:
   DEFAULT_BRANCH:
     description: Default branch of repository (e.g. main, master)
@@ -14,9 +15,11 @@ inputs:
     description: The path to the repository where the action will be used, e.g. 'alstr/my-repo' (automatically set)
     required: false
     default: ${{ github.repository }}
+
 outputs:
   app_name:
-    description: 'Application name'
+    description: Application name based on repository name
+
 runs:
   using: 'docker'
   image: 'Dockerfile'

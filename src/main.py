@@ -16,4 +16,9 @@ github.protect_branchs(repo_owner, repo_name, [default_branch, *branches])
 print('Defining application name to be used in other actions')
 github.create_repository_variable(repo_owner, repo_name, 'APP_NAME', repo_name)
 
+print('Defining app name on output')
+output_file_path = os.getenv('GITHUB_OUTPUT')
+with open(output_file_path, 'a') as file:
+    file.write(f'app_name={repo_name}')
+
 print('Success')
