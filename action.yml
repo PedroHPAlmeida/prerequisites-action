@@ -7,14 +7,13 @@ inputs:
   BRANCHES:
     description: Branches to be created (separeted by comma)
     required: true
+  PAT_GITHUB:
+    description: The GitHub personal access token with repo:status, public_repo and security_events permissions
+    required: true
   REPO:
     description: The path to the repository where the action will be used, e.g. 'alstr/my-repo' (automatically set)
     required: false
     default: ${{ github.repository }}
-  GITHUB_TOKEN:
-    description: The GitHub access token
-    required: false
-    default: ${{ github.token }}
 outputs:
   app_name:
     description: 'Application name'

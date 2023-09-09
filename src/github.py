@@ -4,8 +4,8 @@ from typing import Dict, Any, Union, Tuple, List
 import json
 import requests
 
-GITHUB_API_URL = os.environ.get('GITHUB_API_URL', 'https://api.github.com')
-GITHUB_TOKEN = os.environ.get('INPUT_GITHUB_TOKEN', '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')
+GITHUB_API_URL = os.environ.get('GITHUB_API_URL')
+GITHUB_TOKEN = os.environ.get('INPUT_PAT_GITHUB')
 
 
 def make_request(
